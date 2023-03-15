@@ -1,0 +1,285 @@
+using System;
+using static System.Console;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace _202034013LSH_ROMAN
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Write("로마숫자를 입력해 주세요 : ");
+            string RO = ReadLine();  // 로마자 입력받기
+            RomanConvert(RO);  // 입력받은 로마숫자를 아라비아 숫자로 변환
+            
+            Main(args);  // 다시 실행
+        }
+
+        public static int RomanConvert(string roman)
+        {
+            int result = 0;  // 결과값
+            String romanNumeral = roman;
+            char[] convertToDecimal = roman.ToCharArray();  // 입력받은 string변수를 char[]로 바꾸기
+            bool Error = false;  // 에러판별
+            bool BlankError = false;  // 띄어쓰기 방지
+
+            int intIV = 0;  // 갯수를 세기 위한 변수들
+            int intIX = 0;
+            // int intIX2 = 0;
+            int intXL = 0;
+            int intXC = 0;
+            int intCD = 0;
+            int intCM = 0;
+            int intI = 0;
+            int intV = 0;
+            int intX = 0;
+            int intL = 0;
+            int intC = 0;
+            int intD = 0;
+            int intM = 0;
+
+
+            for (int i = 0; i < convertToDecimal.Length; i++)
+            {
+                switch (convertToDecimal[i])
+                {
+                    case 'M':
+                        intM += 1;  // 로마 숫자 'M'의 갯수
+                        result += 1000;  // 로마숫자 'M'은 아라비아 숫자로 1000 (결과값에 1000을 더함)
+                        if (intM <= 4 && intC <= 1 && intI == 0 && intV == 0 && intX == 0 && intL == 0 && intD == 0)  // 작은 숫자가 앞에오는 것을 방지
+                                                                                                                      // 단 C는 CM(900)을 만들기 위해 쓰지 않음 
+                                                                                                                      // 로마숫자가 5개 이상이되면 에러
+                                                                                                                      // MMMM같이 4개도 안되지만 MMMCM이라는 경우가 있기에 5개로 설정
+                        {
+                            if(intCM == 1)
+                            {
+                                Error = true;
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+                    case 'D':
+                        intD += 1;  // 로마 숫자 'D'의 갯수
+                        result += 500;  // 로마숫자 'D'은 아라비아 숫자로 500 (결과값에 500을 더함)
+                        if (intD <= 1 && intC <= 1 && intI == 0 && intV == 0 && intX == 0 && intL == 0)  // 2개 이상이 되면 에러 (5단위는 2개이상 쓰일 일이 없기 때문)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+
+                    case 'C':
+                        intC += 1;  // 로마 숫자 'C'의 갯수
+                        result += 100;  // 로마숫자 'C'은 아라비아 숫자로 100 (결과값에 100을 더함)
+                        if (intC <= 4 && intX <= 1 && intI == 0 && intV == 0 && intL == 0 && intXC <= 0)
+                        {
+                            
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+
+                    case 'L':
+                        intL += 1;  // 로마 숫자 'L'의 갯수
+                        result += 50;  // 로마숫자 'L'은 아라비아 숫자로 50 (결과값에 50을 더함)
+                        if (intL <= 1 && intX <= 1 && intI == 0 && intV == 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+
+                    case 'X':
+                        intX += 1;  // 로마 숫자 'X'의 갯수
+                        result += 10;  // 로마숫자 'X'은 아라비아 숫자로 10 (결과값에 10을 더함)
+                        if (intX <= 4 && intV == 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+
+                    case 'V':
+                        intV += 1;  // 로마 숫자 'V'의 갯수
+                        result += 5;  // 로마숫자 'V'은 아라비아 숫자로 5 (결과값에 5을 더함)
+                        if (intV <= 1)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+
+                    case 'I':
+                        intI += 1;  // 로마 숫자 'I'의 갯수
+                        result += 1;  // 로마숫자 'I'은 아라비아 숫자로 1 (결과값에 1을 더함)
+                        if (intI <= 3)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Error = true;
+                        }
+                        break;
+                }
+            }
+            if (romanNumeral.Contains("IV"))
+            {
+                intIV += 1;
+                if (intIV == 1 && intI == 1)  // 'IV'가 있을 때 'I'가 1개가 아닐 시 에러 ('IVI' 등등을 방지)
+                {
+                    result -= 2;  // 'IV'가 있을 때 결과값에 2를 빼기
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+            if (romanNumeral.Contains("IX"))
+            {
+                intIX += 1;
+                if (intIX == 1 && intI == 1 && intV == 0)  // 'IX'가 있을 때 'V' 사용을 방지
+                {
+                    result -= 2;
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+
+            if (intIX == 0 && intX >= 4)
+            {
+                Error = true;  // XXXIX 가 아닌데 X가 4개 이상이 되면 에러 (XXXX 와 같은 것을 방지하기 위함)
+            }
+
+            if (romanNumeral.Contains("XL"))
+            {
+                intXL += 1;
+                if (intXL == 1 && intL == 0)  // XLIX가 에러가 나서 intx == 1 코드를 제거
+                {
+                    if (intIX == 0 && intX != 1)  //XLIX가 아닌데 X가 1개가 아니라면 에러 (XLIX가 에러가 나서 추가한 코드)
+                    {
+                        Error = true;
+                    }
+                    result -= 20;
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+            if (romanNumeral.Contains("XC"))
+            {
+                intXC += 1;
+                if (intXC == 1 && intL == 0)
+                {
+                    if (intIX == 0 && intX != 1)
+                    {
+                        Error = true;
+                    }
+                    result -= 20;
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+
+            if (intXC == 0 && intC >= 4)
+            {
+                Error = true;  // CCCXC 가 아닌데 C가 4개 이상이 되면 에러 (CCCC 와 같은 것을 방지하기 위함)
+            }
+
+            if (romanNumeral.Contains("CD"))
+            {
+                intCD += 1;
+                if (intCD == 1 && intD == 0)  // CDXC가 에러가 나서 intc == 1 코드를 제거
+                {
+                    if (intXC == 0 && intC != 1)  //CDXC가 아닌데 C가 1개가 아니라면 에러 (CDXC가 에러가 나서 추가한 코드)
+                    {
+                        Error = true;
+                    }
+                    result -= 200;
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+            if (romanNumeral.Contains("CM"))
+            {
+                intCM += 1;
+                if (intCM == 1 && intD == 0)
+                {
+                    if (intXC == 0 && intC != 1) 
+                    {
+                        Error = true;
+                    }
+                    result -= 200;
+                }
+                else
+                {
+                    Error = true;
+                }
+            }
+
+            if (intCM == 0 && intM >= 4)
+            {
+                Error = true;  // MMMCM 이 아닌데 M이 4개 이상이 되면 에러 (CCCC 와 같은 것을 방지하기 위함)
+            }
+
+            /*
+            for (int i = 0; i < convertToDecimal.Length; i++)
+            {
+                if(intCM == 1 && intM >= 2)
+                {
+                    Error = true;
+                }
+            }
+            */
+
+                if (romanNumeral.Contains(" "))  // 공백이 있다면 에러
+            {
+                BlankError = true;
+            }
+
+            // 결과값 도출
+            if (Error && BlankError == false)
+            {
+                WriteLine("오류입니다. 다시 입력해주세요.\n\n\n");
+            }
+            else if (BlankError)
+            {
+                WriteLine("공백을 제거하고 다시 입력해주세요.\n\n\n");
+            }
+            else if (BlankError == false && Error == false)
+            {
+                WriteLine("변환된 숫자는 : " + result + "\n\n\n");
+            }
+            return result;
+        }
+    }
+}
